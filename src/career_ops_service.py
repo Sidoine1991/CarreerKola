@@ -6,8 +6,7 @@ Runs on Render
 """
 
 import os
-import json
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -108,6 +107,19 @@ def get_best_matches():
         "offset": offset
     }), 200
 
+@app.route("/api/career-ops/jobs/all", methods=["GET"])
+def get_all_jobs():
+    """Get all jobs"""
+    limit = int(request.args.get("limit", 50))
+    offset = int(request.args.get("offset", 0))
+    
+    return jsonify({
+        "jobs": [],
+        "total": 0,
+        "limit": limit,
+        "offset": offset
+    }), 200
+
 # ============================================
 # Statistics Endpoint
 # ============================================
@@ -125,6 +137,14 @@ def get_stats():
         }
     }), 200
 
+@app.route("/api/career-ops/scraper-runs/recent", methods=["GET"])
+def get_recent_runs():
+    """Get recent scraper runs"""
+    return jsonify({
+        "runs": [],
+        "total": 0
+    }), 200
+
 # ============================================
 # Root Endpoint
 # ============================================
@@ -139,7 +159,8 @@ def read_root():
             "health": "/health",
             "status": "/api/career-ops/status",
             "profile": "/api/career-ops/profile",
-            "jobs": "/api/career-ops/jobs/best-matches"
+            "jobs": "/api/career-ops/jobs/best-matches",
+            "stats": "/api/career-ops/stats"
         }
     }), 200
 
